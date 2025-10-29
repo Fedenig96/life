@@ -5,7 +5,7 @@ import serial.tools.list_ports
 import time
 import threading
 from collections import deque
-
+from escpos.printer import Usb
 
 # -------------------- CONFIG --------------------
 
@@ -117,6 +117,30 @@ class SerialManager:
 sm = SerialManager()
 sm.start()
 
+
+def process_printer_test():
+    
+    """
+    Funzione di test per stampante ESC/POS via USB.
+    Stampa "hello world" e ritorna subito.
+    """
+    try:
+        
+        # Vendor ID e Product ID della tua stampante
+        # Puoi scoprirli con 'lsusb' su Linux
+        VENDOR_ID = 0x0483  # sostituisci con quello corretto
+        PRODUCT_ID = 0x5840  # sostituisci con quello corretto
+        INTERFACE = 0
+        OUT_EP = 0x04
+        IN_EP = 0x82
+
+        p = Usb(VENDOR_ID, PRODUCT_ID, interface=INTERFACE, in_ep=IN_EP, out_ep=OUT_EP)
+        p.text("hello world\n")
+        p.cut()
+        print("Stampato su stampante ESC/POS")
+        time.sleep(0.5)  # piccola pausa
+    except Exception as e:
+        print("Errore stampante:", e)
 
 def serial_event_triggered(expected_id):
     """
@@ -231,5 +255,5 @@ while True:
     process_frame2()
     process_frame3()
     process_frame4()
-    
+    process_printer_test()
                        
