@@ -92,20 +92,25 @@ class SerialManager:
         (match_dev_id, match_event). Se lo trova lo rimuove e ritorna True, altrimenti False.
         """
         with self.lock:
-            for ev in list(self.events):          # iteriamo su copia per evitare problemi
-                # ev � (dev_id, event)
+            for ev in list(self.events):  # iteriamo su copia
                 if len(ev) >= 2:
                     dev_id, event = ev[0], ev[1]
                 else:
                     continue
-                if dev_id == match_dev_id and event == match_event:
+
+                if event == match_event:
                     try:
-                        self.events.remove(ev)
+                        self.events.remove(ev)  # consuma sempre PRESS
                     except ValueError:
                         pass
-                    # debug utile
-                    print("SerialManager.pop_matching: consumed", ev)
-                    return True
+
+                    if dev_id == match_dev_id:
+                        print("SerialManager.pop_matching: consumed", ev)
+                        return True  # evento valido per questo frame
+                    else:
+                        print("SerialManager.pop_matching: ignored (wrong ID)", ev)
+                        # evento PRESS sbagliato consumato ma ignorato
+                        return False
         return False
         
 # -------------------- ISTANZIA E START --------------------
