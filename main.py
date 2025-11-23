@@ -118,6 +118,58 @@ sm = SerialManager()
 sm.start()
 
 
+def transition(screen_width, screen_height):
+
+    # ============================
+    # STEP 1 — Quadrante 4 blu
+    # ============================
+
+    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (50, 200, 128), dtype=np.uint8)
+
+    
+    time.sleep(1)
+
+    # ============================
+    # STEP 2 — Quadrante 1 blu
+    # ============================
+
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
+    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+
+    
+    time.sleep(1)
+
+    # ============================
+    # STEP 3 — Quadrante 3 blu
+    # ============================
+
+    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
+    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+
+    
+    time.sleep(1)
+
+    # ============================
+    # STEP 4 — Quadrante 2 blu
+    # ============================
+
+    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
+    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+
+    
+    time.sleep(1)
+
+
+
 def process_printer_test():
     
     """
@@ -252,6 +304,7 @@ def process_frame4():
 
 while True:
     process_frame1()
+    transition(screen_width, screen_height)
     process_frame2()
     process_frame3()
     process_frame4()
