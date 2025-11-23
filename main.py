@@ -160,7 +160,7 @@ def process_printer_test():
         OUT_EP = 0x04
         IN_EP = 0x82
 
-        p = Usb(VENDOR_ID, PRODUCT_ID, interface=INTERFACE, in_ep=IN_EP, out_ep=OUT_EP)
+        p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
         p.text("hello world\n")
         p.cut()
         print("Stampato su stampante ESC/POS")
