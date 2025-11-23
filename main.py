@@ -20,29 +20,35 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_fronta
 cv2.namedWindow("Videowall", cv2.WINDOW_NORMAL)
 cv2.setWindowProperty("Videowall", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 # -------------------- SERIAL MANAGER (interno) --------------------
+# -------------------- SERIAL MANAGER SEMPLIFICATO --------------------
 class SerialManager:
     def __init__(self, baud=BAUD):
         self.baud = baud
-        self.serials = []
+        self.ser = None
+        self.event = None
         self.lock = threading.Lock()
-        self.events = deque()
         self.stop_flag = False
         self.thread = None
-        self._open_all_ports()
+        self._open_port()
 
-    def _open_all_ports(self):
-        ports = [p.device for p in serial.tools.list_ports.comports() if ('ACM' in p.device or 'USB' in p.device)]
-        for p in ports:
-            try:
-                s = serial.Serial(p, self.baud, timeout=0.1)
-                s.reset_input_buffer()
-                self.serials.append(s)
-                print("Opened serial port:", p)
-            except Exception as e:
-                print("Failed to open", p, e)
+    def _open_port(self):
+        ports = [p.device for p in serial.tools.list_ports.comports()
+                 if ('ACM' in p.device or 'USB' in p.device)]
 
+        if not ports:
+            print("Nessuna porta seriale trovata")
+            return
+        
+        try:
+            self.ser = serial.Serial(ports[0], self.baud, timeout=0.1)
+            self.ser.reset_input_buffer()
+            print("Seriale aperta:", ports[0])
+        except Exception as e:
+            print("Errore apertura seriale:", e)
 
     def start(self):
+        if not self.ser:
+            return
         self.stop_flag = False
         self.thread = threading.Thread(target=self._read_loop, daemon=True)
         self.thread.start()
@@ -51,67 +57,31 @@ class SerialManager:
         self.stop_flag = True
         if self.thread:
             self.thread.join(timeout=1)
-        for s in self.serials:
+        if self.ser:
             try:
-                s.close()
+                self.ser.close()
             except:
                 pass
 
     def _read_loop(self):
         while not self.stop_flag:
-            for s in list(self.serials):
-                try:
-                    if s.in_waiting:
-                        line = s.readline().decode('utf-8', errors='ignore').strip()
-                        if line:
-                            parts = line.split(',')
-                            # expected format: ID,<n>,PRESS
-                            if len(parts) >= 3 and parts[0] == 'ID':
-                                try:
-                                    dev_id = int(parts[1])
-                                except:
-                                    dev_id = None
-                                event = parts[2].strip().upper()
-                                with self.lock:
-                                    self.events.append((dev_id, event))
-                                print("Serial event:", dev_id, event)
-                            else:
-                                print("Serial raw:", line)
-                except Exception as e:
-                    print("Serial read error:", e)
-            time.sleep(0.01)
+            try:
+                if self.ser.in_waiting:
+                    line = self.ser.readline().decode('utf-8', errors='ignore').strip().upper()
 
-    def get_event(self):
+                    if line.startswith("PRES"):
+                        with self.lock:
+                            self.event = line  # ultimo evento ricevuto
+                        print("Evento seriale:", line)
+            except Exception as e:
+                print("Errore seriale:", e)
+            time.sleep(0.005)
+
+    def get_last_event(self):
         with self.lock:
-            return self.events.popleft() if self.events else None
-
-
-    def pop_matching(self, match_dev_id, match_event='PRESS'):
-        """
-        Cerca il primo evento (dev_id, event) nella coda self.events che corrisponde a
-        (match_dev_id, match_event). Se lo trova lo rimuove e ritorna True, altrimenti False.
-        """
-        with self.lock:
-            for ev in list(self.events):  # iteriamo su copia
-                if len(ev) >= 2:
-                    dev_id, event = ev[0], ev[1]
-                else:
-                    continue
-
-                if event == match_event:
-                    try:
-                        self.events.remove(ev)  # consuma sempre PRESS
-                    except ValueError:
-                        pass
-
-                    if dev_id == match_dev_id:
-                        print("SerialManager.pop_matching: consumed", ev)
-                        return True  # evento valido per questo frame
-                    else:
-                        print("SerialManager.pop_matching: ignored (wrong ID)", ev)
-                        # evento PRESS sbagliato consumato ma ignorato
-                        return False
-        return False
+            ev = self.event
+            self.event = None
+            return ev
         
 # -------------------- ISTANZIA E START --------------------
 sm = SerialManager()
@@ -198,16 +168,9 @@ def process_printer_test():
     except Exception as e:
         print("Errore stampante:", e)
 
-def serial_event_triggered(expected_id):
-    """
-    Restituisce True SOLO se � presente e viene consumato un evento
-    (expected_id, 'PRESS') nella coda.
-    """
-    # debug (opzionale) per vedere lo stato della coda
-    # with sm.lock:
-    #     print("Queue now:", list(sm.events))
-
-    return sm.pop_matching(expected_id, 'PRESS')
+def serial_event_triggered(n):
+    ev = sm.get_last_event()
+    return ev == f"PRES{n}"
 
 def build_videowall(qf1, qf2, qf3, qf4):
     wall = np.zeros((screen_height, screen_width, 3), dtype=np.uint8)
