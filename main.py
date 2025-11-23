@@ -99,7 +99,7 @@ def transition(screen_width, screen_height):
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.full((screen_height//2, screen_width//2, 3), (50, 200, 128), dtype=np.uint8)
     videowall = build_videowall(qf1, qf2, qf3, qf4)
-    cv2.imshow("Videowall", videowall)  
+    
     
     time.sleep(1)
 
@@ -112,7 +112,7 @@ def transition(screen_width, screen_height):
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     videowall = build_videowall(qf1, qf2, qf3, qf4)
-    cv2.imshow("Videowall", videowall)
+    
     
     time.sleep(1)
 
@@ -125,7 +125,7 @@ def transition(screen_width, screen_height):
     qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     videowall = build_videowall(qf1, qf2, qf3, qf4)
-    cv2.imshow("Videowall", videowall) 
+    
     
     time.sleep(1)
 
@@ -138,7 +138,7 @@ def transition(screen_width, screen_height):
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     videowall = build_videowall(qf1, qf2, qf3, qf4)
-    cv2.imshow("Videowall", videowall) 
+    
     
     time.sleep(1)
 
@@ -160,7 +160,7 @@ def process_printer_test():
         OUT_EP = 0x04
         IN_EP = 0x82
 
-        p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
+        p = Usb(VENDOR_ID, PRODUCT_ID, interface=INTERFACE, in_ep=IN_EP, out_ep=OUT_EP)
         p.text("hello world\n")
         p.cut()
         print("Stampato su stampante ESC/POS")
