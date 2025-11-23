@@ -98,7 +98,7 @@ def transition(screen_width, screen_height):
     qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.full((screen_height//2, screen_width//2, 3), (50, 200, 128), dtype=np.uint8)
-    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    yield (qf1, qf2, qf3, qf4)
     
     
     time.sleep(1)
@@ -111,7 +111,7 @@ def transition(screen_width, screen_height):
     qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    yield (qf1, qf2, qf3, qf4)
     
     
     time.sleep(1)
@@ -124,7 +124,7 @@ def transition(screen_width, screen_height):
     qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    yield (qf1, qf2, qf3, qf4)
     
     
     time.sleep(1)
@@ -137,7 +137,7 @@ def transition(screen_width, screen_height):
     qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    yield (qf1, qf2, qf3, qf4)
     
     
     time.sleep(1)
