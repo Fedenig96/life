@@ -8,7 +8,7 @@ from collections import deque
 from escpos.printer import Usb
 
 # -------------------- CONFIG --------------------
-
+saved_frame = None   # conterrà l'immagine grayscale salvata
 BAUD = 115200
 screen_width = 1280
 screen_height = 720
@@ -387,6 +387,8 @@ def build_videowall(qf1, qf2, qf3, qf4):
     return wall
 
 def process_frame1():
+    global saved_frame
+    saved_frame = None  # reset
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -416,6 +418,8 @@ def process_frame1():
             cv2.rectangle(display_gray, (x, y), (x+w, y+h), (255,255,255), 2)
             
         qf1 = display_gray
+
+        saved_frame = gray.copy()
         
         # Costruisci videowall
         videowall = build_videowall(qf1,qf2,qf3,qf4)
@@ -426,16 +430,31 @@ def process_frame1():
             exit(0)
 
         if serial_event_triggered(1):
+            ret, frame = cap.read()
+            if ret:
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                saved_frame = gray.copy()
+                print("Frame salvato:", saved_frame.shape)
             # piccolo pausa per sicurezza (debounce software lato Pi, opz.)
             time.sleep(0.05)
             break
 
 def process_frame2():
+
+    if saved_frame is not None:
+        preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
+    
+
     while True:
-        qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf2 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
+
+
+        modified = 255 - preview
+        saved_frame = modified.copy()
+
+        qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
+        qf2 = cv2.cvtColor(preview, cv2.COLOR_GRAY2BGR)
         qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+        qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8) # rosso
 
         videowall = build_videowall(qf1, qf2, qf3, qf4)
         cv2.imshow("Videowall", videowall)
@@ -449,7 +468,16 @@ def process_frame2():
 
 
 def process_frame3():
+    if saved_frame is not None:
+        preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
+
+        modified = cv2.GaussianBlur(preview, (5,5), 0)
+        saved_frame = modified.copy()  # aggiorna saved_frame per il prossimo step
+
+
+
+
         qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf3 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8) # verde
@@ -467,7 +495,15 @@ def process_frame3():
 
 
 def process_frame4():
+    if saved_frame is not None:
+        preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
+
+        modified = cv2.threshold(preview, 128, 255, cv2.THRESH_BINARY)
+        saved_frame = modified.copy()  # pronto per il print
+
+
+
         qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
