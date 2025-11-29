@@ -93,102 +93,57 @@ def transition(screen_width, screen_height):
     # ============================
     # STEP 1 — Quadrante 4 blu
     # ============================
-    while True:
-            
-        qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8) # blu
+    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
 
-        videowall = build_videowall(qf1, qf2, qf3, qf4)
-        cv2.imshow("Videowall", videowall)
+    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    cv2.imshow("Videowall", videowall)
+    cv2.waitKey(1)
+    time.sleep(1)
 
-        
-        
-        time.sleep(1)
-        break
-        # ============================
-        # STEP 2 — Quadrante 1 blu
-        # ============================
-    while True:
-            
-        qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
-        qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        videowall = build_videowall(qf1, qf2, qf3, qf4)
-        cv2.imshow("Videowall", videowall)
-        
-        time.sleep(1)
-        break
-        # ============================
-        # STEP 3 — Quadrante 3 blu
-        # ============================
-    while True:
-            
-        qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
-        qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    # ============================
+    # STEP 2 — Quadrante 1 rosa
+    # ============================
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
+    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
 
+    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    cv2.imshow("Videowall", videowall)
+    cv2.waitKey(1)
+    time.sleep(1)
 
-        cv2.putText(
-            qf2,
-            "ARRIVO",
-            (80, 60),
-            cv2.FONT_HERSHEY_PLAIN,
-            1.0,
-            (255, 255, 255),
-            2,
-            cv2.LINE_AA
-        )
-        cv2.putText(
-            qf3,
-            "LOADING...",
-            (80, 60),
-            cv2.FONT_HERSHEY_PLAIN,
-            1.0,
-            (255, 255, 255),
-            2,
-            cv2.LINE_AA
-        )
+    # ============================
+    # STEP 3 — Quadrante 3 giallo
+    # ============================
+    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
+    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
 
-        cv2.putText(
-            qf2,
-            "01101010110",
-            (80, 60),
-            cv2.FONT_HERSHEY_PLAIN,
-            1.0,
-            (255, 255, 255),
-            2,
-            cv2.LINE_AA
-        )
+    cv2.putText(qf2, "ARRIVO", (80, 60), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "LOADING...", (80, 60), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
+    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    cv2.imshow("Videowall", videowall)
+    cv2.waitKey(1)
+    time.sleep(1)
 
+    # ============================
+    # STEP 4 — Quadrante 2 bianco
+    # ============================
+    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
+    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
 
-        videowall = build_videowall(qf1, qf2, qf3, qf4)
-        cv2.imshow("Videowall", videowall)
-        
-        
-        time.sleep(1)
-        break
-        # ============================
-        # STEP 4 — Quadrante 2 blu
-        # ============================
-    while True:
-            
-        qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
-        qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        videowall = build_videowall(qf1, qf2, qf3, qf4)
-        cv2.imshow("Videowall", videowall)
-        
-        
-        time.sleep(1)
-        break
-
-
+    videowall = build_videowall(qf1, qf2, qf3, qf4)
+    cv2.imshow("Videowall", videowall)
+    cv2.waitKey(1)
+    time.sleep(1)
 
 def process_printer_test():
     
