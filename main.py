@@ -201,7 +201,16 @@ def process_frame1():
         qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         
-        
+        cv2.putText(
+            qf1,
+            "Guarda qui →",
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1.0,
+            (255, 255, 255),
+            2,
+            cv2.LINE_AA
+        )
         # Face detection e grayscale per il quadrante 1
 
         gray = cv2.cvtColor(qf1, cv2.COLOR_BGR2GRAY)
@@ -209,6 +218,16 @@ def process_frame1():
         faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5, minSize=(50,50))
         for (x, y, w, h) in faces:
             cv2.rectangle(display_gray, (x, y), (x+w, y+h), (255,255,255), 2)
+            cv2.putText(
+            qf1,
+            "Guarda qui →",
+            (20, 60),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1.0,
+            (255, 255, 255),
+            2,
+            cv2.LINE_AA
+        )
         qf1 = display_gray
         
         # Costruisci videowall
