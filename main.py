@@ -380,9 +380,9 @@ def process_printer_test():
         scale = max_width / img.shape[1]
         new_height = int(img.shape[0] * scale)
         img_resized = cv2.resize(img, (max_width, new_height), interpolation=cv2.INTER_LINEAR)
-
+        img_bright = cv2.add(img_resized,30)
         # Converti in PIL Image 1-bit
-        pil_img = Image.fromarray(img_resized)
+        pil_img = Image.fromarray(img_bright)
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
 
         # Invia alla stampante
