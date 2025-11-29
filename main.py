@@ -450,7 +450,7 @@ def process_frame2():
 
 
         modified = 255 - preview
-        saved_frame = modified.copy()
+        
 
         qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
         qf2 = cv2.cvtColor(preview, cv2.COLOR_GRAY2BGR)
@@ -463,6 +463,7 @@ def process_frame2():
         if cv2.waitKey(1) == 27:
             exit(0)
         if serial_event_triggered(2):
+            saved_frame = modified.copy()
             # piccolo pausa per sicurezza (debounce software lato Pi, opz.)
             time.sleep(0.05)
             break
@@ -491,6 +492,8 @@ def process_frame3():
         if cv2.waitKey(1) == 27:
             exit(0)
         if serial_event_triggered(3):
+            saved_frame = modified.copy()  # aggiorna saved_frame per il prossimo step
+           
             # piccolo pausa per sicurezza (debounce software lato Pi, opz.)
             time.sleep(0.05)
             break
@@ -502,7 +505,7 @@ def process_frame4():
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
 
-        modified = cv2.threshold(preview, 128, 255, cv2.THRESH_BINARY)
+        modified = preview, 128, 255, cv2.THRESH_BINARY)
         saved_frame = modified.copy()  # pronto per il print
 
 
@@ -519,6 +522,7 @@ def process_frame4():
             exit(0)
 
         if serial_event_triggered(4):
+            saved_frame = modified.copy() 
             # piccolo pausa per sicurezza (debounce software lato Pi, opz.)
             time.sleep(0.05)
             break
