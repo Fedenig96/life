@@ -352,10 +352,12 @@ def transition4(screen_width, screen_height):
 
 def process_printer_test():
     
-    """
-    Funzione di test per stampante ESC/POS via USB.
-    Stampa "hello world" e ritorna subito.
-    """
+    global saved_frame
+
+    if saved_frame is None:
+        print("Nessun frame salvato da stampare!")
+        return
+    
     try:
         
         # Vendor ID e Product ID della tua stampante
@@ -367,7 +369,26 @@ def process_printer_test():
         IN_EP = 0x82
 
         p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
-        p.text("hello world\n")
+
+
+        if len(img.shape) == 3:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        # Ridimensiona alla larghezza massima della stampante
+        max_width = 384
+        height, width = img.shape
+        if width > max_width:
+            new_height = int(height * max_width / width)
+            img = cv2.resize(img, (max_width, new_height), interpolation=cv2.INTER_AREA)
+
+        # Converti in 1-bit
+        _, img_bin = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
+
+
+
+
+
+        p.image(img_bin) 
         p.cut()
         print("Stampato su stampante ESC/POS")
         time.sleep(0.5)  # piccola pausa
@@ -481,14 +502,16 @@ def process_frame3():
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
 
-    # Parametri cerchio dove NON applicare il noise
-    cx, cy, r = screen_width//4, screen_height//4, 50  # esempio: centro e raggio
+    
+    # Coordinate del rettangolo
+    x, y = 100, 50      # angolo in alto a sinistra
+    w, h = 80, 80       # larghezza e altezza del rettangolo
     noise_intensity = 30  # regolabile, quantità di rumore
 
     while True:
         # Creo la maschera circolare
-        mask = np.zeros_like(preview, dtype=np.uint8)  # tipo uint8
-        cv2.circle(mask, (cx, cy), r, 255, -1)  # 255 dentro il cerchio
+        mask = np.zeros_like(preview, dtype=np.uint8)
+        cv2.rectangle(mask, (x, y), (x + w, y + h), 255, -1)  # 255 dentro il cerchio
 
         # Creo il rumore
         noise = np.random.randint(-noise_intensity, noise_intensity+1, preview.shape, dtype=np.int16)
@@ -497,7 +520,7 @@ def process_frame3():
 
         # Applico il noise solo fuori dal cerchio
         modified = noisy_img.copy()
-        modified[mask == 255] = preview[mask == 255]  # l'area dentro il cerchio resta originale
+        modified[mask == 255] = preview[mask == 255]   # l'area dentro il cerchio resta originale
 
         # Aggiorno saved_frame per il prossimo step
         saved_frame = modified.copy()
