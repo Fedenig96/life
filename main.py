@@ -440,6 +440,7 @@ def process_frame1():
             break
 
 def process_frame2():
+    global saved_frame
 
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
@@ -468,6 +469,7 @@ def process_frame2():
 
 
 def process_frame3():
+    global saved_frame
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
@@ -495,6 +497,7 @@ def process_frame3():
 
 
 def process_frame4():
+    global saved_frame
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
