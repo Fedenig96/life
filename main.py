@@ -481,23 +481,26 @@ def process_frame3():
     global saved_frame
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
-    cx, cy = 200, 150   # coordinate di esempio
-    r = 80               # raggio del cerchio
-    noise_intensity = 30 # intensità del rumore (0-255)
+
+    # Parametri cerchio dove NON applicare il noise
+    cx, cy, r = screen_width//4, screen_height//4, 50  # esempio: centro e raggio
+    noise_intensity = 30  # regolabile, quantità di rumore
 
     while True:
-        # Genero rumore gaussiano
+        # Creo la maschera circolare
+        mask = np.zeros_like(preview, dtype=bool)
+        cv2.circle(mask, (cx, cy), r, True, -1)  # True dentro il cerchio
+
+        # Creo il rumore
         noise = np.random.randint(-noise_intensity, noise_intensity+1, preview.shape, dtype=np.int16)
         noisy_img = preview.astype(np.int16) + noise
         noisy_img = np.clip(noisy_img, 0, 255).astype(np.uint8)
 
-        # creo la maschera circolare
-        mask = np.zeros_like(preview, dtype=np.uint8)
-        cv2.circle(mask, (cx, cy), r, 255, -1)  # 255 dentro il cerchio
+        # Applico il noise solo fuori dal cerchio
+        modified = noisy_img.copy()
+        modified[mask] = preview[mask]  # l'area dentro il cerchio resta originale
 
-        # combino immagini: dentro il cerchio originale, fuori noisy
-        modified = np.where(mask==255, preview, noisy_img)
-
+        # Aggiorno saved_frame per il prossimo step
         saved_frame = modified.copy()
 
         qf1 = np.full((screen_height//2, screen_width//2, 3), (255,0,255), dtype=np.uint8) # rosso
