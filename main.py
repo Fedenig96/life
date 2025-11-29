@@ -449,11 +449,19 @@ def process_frame2():
     while True:
 
 
-        modified = 255 - preview
+        descaling_factor = 4  # puoi cambiare questo valore a piacere
+
+        small = cv2.resize(preview, 
+                           (preview.shape[1] // descaling_factor, preview.shape[0] // descaling_factor), 
+                           interpolation=cv2.INTER_AREA)
+        # riporta alla dimensione originale del quadrante
+        modified_preview = cv2.resize(small, (preview.shape[1], preview.shape[0]), interpolation=cv2.INTER_NEAREST)
+
+        saved_frame = modified_preview.copy() 
         
 
         qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
-        qf2 = cv2.cvtColor(modified, cv2.COLOR_GRAY2BGR)
+        qf2 = cv2.cvtColor(modified_preview, cv2.COLOR_GRAY2BGR)
         qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8) # rosso
 
@@ -473,13 +481,24 @@ def process_frame3():
     global saved_frame
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
+    cx, cy = 200, 150   # coordinate di esempio
+    r = 80               # raggio del cerchio
+    noise_intensity = 30 # intensità del rumore (0-255)
+
     while True:
+        # Genero rumore gaussiano
+        noise = np.random.randint(-noise_intensity, noise_intensity+1, preview.shape, dtype=np.int16)
+        noisy_img = preview.astype(np.int16) + noise
+        noisy_img = np.clip(noisy_img, 0, 255).astype(np.uint8)
 
-        modified = cv2.GaussianBlur(preview, (5,5), 0)
-        saved_frame = modified.copy()  # aggiorna saved_frame per il prossimo step
+        # creo la maschera circolare
+        mask = np.zeros_like(preview, dtype=np.uint8)
+        cv2.circle(mask, (cx, cy), r, 255, -1)  # 255 dentro il cerchio
 
+        # combino immagini: dentro il cerchio originale, fuori noisy
+        modified = np.where(mask==255, preview, noisy_img)
 
-
+        saved_frame = modified.copy()
 
         qf1 = np.full((screen_height//2, screen_width//2, 3), (255,0,255), dtype=np.uint8) # rosso
         qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
