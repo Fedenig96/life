@@ -487,8 +487,8 @@ def process_frame3():
 
     while True:
         # Creo la maschera circolare
-        mask = np.zeros_like(preview, dtype=bool)
-        cv2.circle(mask, (cx, cy), r, True, -1)  # True dentro il cerchio
+        mask = np.zeros_like(preview, dtype=np.uint8)  # tipo uint8
+        cv2.circle(mask, (cx, cy), r, 255, -1)  # 255 dentro il cerchio
 
         # Creo il rumore
         noise = np.random.randint(-noise_intensity, noise_intensity+1, preview.shape, dtype=np.int16)
@@ -497,7 +497,7 @@ def process_frame3():
 
         # Applico il noise solo fuori dal cerchio
         modified = noisy_img.copy()
-        modified[mask] = preview[mask]  # l'area dentro il cerchio resta originale
+        modified[mask == 255] = preview[mask == 255]  # l'area dentro il cerchio resta originale
 
         # Aggiorno saved_frame per il prossimo step
         saved_frame = modified.copy()
