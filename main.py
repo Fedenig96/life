@@ -453,7 +453,7 @@ def process_frame2():
         
 
         qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
-        qf2 = cv2.cvtColor(preview, cv2.COLOR_GRAY2BGR)
+        qf2 = cv2.cvtColor(modified, cv2.COLOR_GRAY2BGR)
         qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8) # rosso
 
@@ -481,10 +481,10 @@ def process_frame3():
 
 
 
-        qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+        qf1 = np.full((screen_height//2, screen_width//2, 3), (255,0,255), dtype=np.uint8) # rosso
         qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf3 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8) # verde
-        qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+        qf3 = cv2.cvtColor(modified, cv2.COLOR_GRAY2BGR)
+        qf4 = np.full((screen_height//2, screen_width//2, 3), (255,255,0), dtype=np.uint8) # rosso
 
         videowall = build_videowall(qf1, qf2, qf3, qf4)
         cv2.imshow("Videowall", videowall)
@@ -504,17 +504,39 @@ def process_frame4():
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
+        x_offset = 50  # quanto traslare in pixel
+        quad_width = 100  # larghezza di ciascun "quadrante" da spostare
 
-        modified = preview, 128, 255, cv2.THRESH_BINARY)
+        modified = preview.copy()
+        h, w = modified.shape[:2]
+
+        # Quadrante 1 (alto-sinistra)
+        start_x = 0
+        end_x = start_x + quad_width
+        quad = modified[:, start_x:end_x].copy()
+        blank = np.zeros_like(quad)
+        blank[:, x_offset:] = quad[:, :quad.shape[1]-x_offset]
+        modified[:, start_x:end_x] = blank
+
+        # Quadrante 2 (alto-destra)
+        start_x = quad_width
+        end_x = start_x + quad_width
+        quad = modified[:, start_x:end_x].copy()
+        blank = np.zeros_like(quad)
+        blank[:, x_offset:] = quad[:, :quad.shape[1]-x_offset]
+        modified[:, start_x:end_x] = blank
+
+
         saved_frame = modified.copy()  # pronto per il print
 
 
 
-        qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8) # blu
+        qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
+        qf2 = np.full((screen_height//2, screen_width//2, 3), (128,128,0), dtype=np.uint8) # rosso
+        qf3 = np.full((screen_height//2, screen_width//2, 3), (0,128,128), dtype=np.uint8) # rosso
+        qf4 = cv2.cvtColor(modified, cv2.COLOR_GRAY2BGR)
 
+        
         videowall = build_videowall(qf1, qf2, qf3, qf4)
         cv2.imshow("Videowall", videowall)
 
