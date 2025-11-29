@@ -323,8 +323,8 @@ def transition4(screen_width, screen_height):
     # STEP 2 — Quadrante 1 rosa
     # ============================
     qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     cv2.putText(qf1, "E UN REGALO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf2, "SPECIALE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
@@ -339,7 +339,7 @@ def transition4(screen_width, screen_height):
     # ============================
     # STEP 3 — Quadrante 3 giallo
     # ============================
-    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
     qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
@@ -360,7 +360,7 @@ def transition4(screen_width, screen_height):
     qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf2 = np.full((screen_height//2, screen_width//2, 3), (0, 255, 0), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf4 =np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
     cv2.putText(qf1, "NON TORNA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf2, "LA TUA VITA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf4, "COGLI L' ATTIMO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
@@ -403,7 +403,7 @@ def process_printer_test():
         scale = max_width / img.shape[1]
         new_height = int(img.shape[0] * scale)
         img_resized = cv2.resize(img, (max_width, new_height), interpolation=cv2.INTER_LINEAR)
-        img_bright = cv2.add(img_resized,30)
+        img_bright = cv2.add(img_resized,70)
         # Converti in PIL Image 1-bit
         pil_img = Image.fromarray(img_bright)
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
