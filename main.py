@@ -6,6 +6,7 @@ import time
 import threading
 from collections import deque
 from escpos.printer import Usb
+from PIL import Image
 
 # -------------------- CONFIG --------------------
 saved_frame = None   # conterrà l'immagine grayscale salvata
@@ -368,27 +369,25 @@ def process_printer_test():
         OUT_EP = 0x04
         IN_EP = 0x82
 
-        p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
+        # p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
 
         img = saved_frame.copy() 
         if len(img.shape) == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # Ridimensiona alla larghezza massima della stampante
-        max_width = 384
-        height, width = img.shape
-        if width > max_width:
-            new_height = int(height * max_width / width)
-            img = cv2.resize(img, (max_width, new_height), interpolation=cv2.INTER_AREA)
+        max_width = 384  # tipico per molte termiche ESC/POS
+        scale = max_width / img.shape[1]
+        new_height = int(img.shape[0] * scale)
+        img_resized = cv2.resize(img, (max_width, new_height), interpolation=cv2.INTER_LINEAR)
 
-        # Converti in 1-bit
-        _, img_bin = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
+        # Converti in PIL Image 1-bit
+        pil_img = Image.fromarray(img_resized)
+        pil_img = pil_img.convert('1')  # bianco/nero 1-bit
 
-
-
-
-
-        p.image(img_bin) 
+        # Invia alla stampante
+        p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
+        p.image(pil_img)
         p.cut()
         print("Stampato su stampante ESC/POS")
         time.sleep(0.5)  # piccola pausa
