@@ -95,10 +95,12 @@ def transition1(screen_width, screen_height):
     # STEP 1 — Quadrante 4 blu
     # ============================
     qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,120,128), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (128,0,255), dtype=np.uint8)
     qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
+    cv2.putText(qf1, "CHI SEI?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf2, "SCEGLI BENE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "CIAO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf3, "NON TORNI INDIETRO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
@@ -110,11 +112,13 @@ def transition1(screen_width, screen_height):
     # STEP 2 — Quadrante 1 rosa
     # ============================
     qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf1, "DOVE SONO?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf4, "ASPETTA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,255), dtype=np.uint8)
+    cv2.putText(qf1, "INIZI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "PIXEL", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "RICONOSCITI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "SEI TU?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -124,13 +128,15 @@ def transition1(screen_width, screen_height):
     # ============================
     # STEP 3 — Quadrante 3 giallo
     # ============================
-    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf1 =np.full((screen_height//2, screen_width//2, 3), (0,255,255), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
     qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
 
-    cv2.putText(qf2, "ARRIVO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "LOADING...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "DECIDI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "SARAI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "LA GRANDEZZA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "TE STESSO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -141,11 +147,13 @@ def transition1(screen_width, screen_height):
     # STEP 4 — Quadrante 2 bianco
     # ============================
     qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf2, "ARRIVO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "LOADING...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    qf4 =np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
+    cv2.putText(qf1, "NON SBAGLIARE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "NON PERDONA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "TE NE ANDRAI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "CARPE DIEM", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -158,12 +166,14 @@ def transition2(screen_width, screen_height):
     # ============================
     # STEP 1 — Quadrante 4 blu
     # ============================
-    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
-    cv2.putText(qf2, "SCEGLI BENE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "NON TORNI INDIETRO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (128,230,0), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (130,0,120), dtype=np.uint8)
+    cv2.putText(qf1, "RUMORE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "CONFUSIONE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "PULISCI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "CHI SARAI?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -174,11 +184,13 @@ def transition2(screen_width, screen_height):
     # STEP 2 — Quadrante 1 rosa
     # ============================
     qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf1, "DOVE SONO?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf4, "ASPETTA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8)
+    cv2.putText(qf1, "FOCALIZZA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "CRESCI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "INDIVIDUA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "TROVA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -188,11 +200,10 @@ def transition2(screen_width, screen_height):
     # ============================
     # STEP 3 — Quadrante 3 giallo
     # ============================
-    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (120,50,60), dtype=np.uint8)
     qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (0,128,255), dtype=np.uint8)
     cv2.putText(qf2, "ARRIVO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf3, "LOADING...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
@@ -204,10 +215,10 @@ def transition2(screen_width, screen_height):
     # ============================
     # STEP 4 — Quadrante 2 bianco
     # ============================
-    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (255,255,0), dtype=np.uint8)
     qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
-    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (255,128,0), dtype=np.uint8)
     cv2.putText(qf2, "ARRIVO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf3, "LOADING...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
@@ -223,11 +234,13 @@ def transition3(screen_width, screen_height):
     # STEP 1 — Quadrante 4 blu
     # ============================
     qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (120,120,10), dtype=np.uint8)
     qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
-    cv2.putText(qf2, "SCEGLI BENE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "NON TORNI INDIETRO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "CROLLA TUTTO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "SI SGRETOLA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "FRAMMENTI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "RECUPERA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -238,11 +251,13 @@ def transition3(screen_width, screen_height):
     # STEP 2 — Quadrante 1 rosa
     # ============================
     qf1 = np.full((screen_height//2, screen_width//2, 3), (255, 0, 128), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (128,0,0), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf1, "DOVE SONO?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf4, "ASPETTA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (255,128,0), dtype=np.uint8)
+    cv2.putText(qf1, "ATTACCA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "CRATERI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "SCOMPONI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "TI CI VEDI?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -252,13 +267,15 @@ def transition3(screen_width, screen_height):
     # ============================
     # STEP 3 — Quadrante 3 giallo
     # ============================
-    qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
-    qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf1 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 128), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0, 128, 128), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (0, 128, 0), dtype=np.uint8)
+    qf4 = np.full((screen_height//2, screen_width//2, 3), (0, 255, 0), dtype=np.uint8)
 
-    cv2.putText(qf2, "ARRIVO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "LOADING...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "RICONOSCI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "TE STESSO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "TROPPO TEMPO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "PAUSA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -272,8 +289,10 @@ def transition3(screen_width, screen_height):
     qf2 = np.full((screen_height//2, screen_width//2, 3), (255, 255, 255), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf2, "ARRIVO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "LOADING...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "STANCO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "ORMAI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "STESS", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "ANSIA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -287,11 +306,13 @@ def transition4(screen_width, screen_height):
     # STEP 1 — Quadrante 4 blu
     # ============================
     qf1 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+    qf2 = np.full((screen_height//2, screen_width//2, 3), (0,255,0), dtype=np.uint8)
+    qf3 = np.full((screen_height//2, screen_width//2, 3), (255,255,0), dtype=np.uint8)
     qf4 = np.full((screen_height//2, screen_width//2, 3), (255,0,0), dtype=np.uint8)
-    cv2.putText(qf2, "SCEGLI BENE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "NON TORNI INDIETRO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "BASTA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "CERCA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "#END PROCESS|RETUN 0", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "CHI SEI STATO?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -305,8 +326,10 @@ def transition4(screen_width, screen_height):
     qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf1, "DOVE SONO?", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf4, "ASPETTA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "E UN REGALO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "SPECIALE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "PER TE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "E TUO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -321,10 +344,10 @@ def transition4(screen_width, screen_height):
     qf3 = np.full((screen_height//2, screen_width//2, 3), (128, 128, 0), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
 
-    cv2.putText(qf2, "DISTRUGGE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "E LA FINE", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "RIORDINA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf3, "FRAMMENTI", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "SEI STATO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "UNICO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "HAI FATTO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf3, "LOADING IMAGE.PIC/TRESHOLD", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
     cv2.imshow("Videowall", videowall)
@@ -338,9 +361,9 @@ def transition4(screen_width, screen_height):
     qf2 = np.full((screen_height//2, screen_width//2, 3), (0, 255, 0), dtype=np.uint8)
     qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
     qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-    cv2.putText(qf1, "CI SIAMO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf2, "SARA' TUO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
-    cv2.putText(qf4, "PRENDILO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf1, "NON TORNA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf2, "LA TUA VITA", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+    cv2.putText(qf4, "COGLI L' ATTIMO", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
     cv2.putText(qf3, "PRINT PROCESS/EXEC...", (120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
 
     videowall = build_videowall(qf1, qf2, qf3, qf4)
