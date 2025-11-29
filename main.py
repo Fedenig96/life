@@ -471,7 +471,6 @@ def process_frame2():
         if cv2.waitKey(1) == 27:
             exit(0)
         if serial_event_triggered(2):
-            saved_frame = modified.copy()
             # piccolo pausa per sicurezza (debounce software lato Pi, opz.)
             time.sleep(0.05)
             break
