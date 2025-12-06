@@ -599,12 +599,16 @@ def process_frame3():
     x, y = 100, 50      # angolo in alto a sinistra
     w, h = 80, 80       # larghezza e altezza del rettangolo
     noise_intensity = 30  # regolabile, quantità di rumore
+    max_x = preview.shape[1] - w  # massima posizione X
+    max_y = preview.shape[0] - h  # massima posizione Y
 
     while True:
-        
         pots_values = sm.get_pots_snapshot()
-        x = pots_values["x"] // 2      # mappatura esempio
-        y = pots_values["y"] // 2
+
+        # Map dei potenziometri x e y in coordinate indipendenti
+        x = int(pots_values["x"] / 1023 * max_x)  # normalizzo sul range del rettangolo
+        y = int(pots_values["y"] / 1023 * max_y)
+
         noise_intensity = pots_values["noise"] // 10
 
 
@@ -645,9 +649,12 @@ def process_frame4():
     global saved_frame
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
+    
     while True:
         pots_values = sm.get_pots_snapshot()
-        x_offset = pots_values["xoffset"] // 2
+        # utilizziamo le variabili già presenti
+        x_offset = pots_values["x"] // 2      # potenziometro X
+        y_offset = pots_values["y"] // 2      # potenziometro Y
         quad_width = max(1, pots_values["quadwidth"] // 10)
 
         modified = preview.copy()
@@ -658,7 +665,8 @@ def process_frame4():
         end_x = start_x + quad_width
         quad = modified[:, start_x:end_x].copy()
         blank = np.zeros_like(quad)
-        blank[:, x_offset:] = quad[:, :quad.shape[1]-x_offset]
+        shift = np.clip(x_offset, 0, quad.shape[1])
+        blank[:, shift:] = quad[:, :quad.shape[1]-shift]
         modified[:, start_x:end_x] = blank
 
         # Quadrante 2 (alto-destra)
@@ -666,20 +674,19 @@ def process_frame4():
         end_x = start_x + quad_width
         quad = modified[:, start_x:end_x].copy()
         blank = np.zeros_like(quad)
-        blank[:, x_offset:] = quad[:, :quad.shape[1]-x_offset]
+        shift = np.clip(y_offset, 0, quad.shape[1])
+        blank[:, shift:] = quad[:, :quad.shape[1]-shift]
         modified[:, start_x:end_x] = blank
 
+        # Aggiorno saved_frame
+        saved_frame = modified.copy()
 
-        saved_frame = modified.copy()  # pronto per il print
-
-
-
-        qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8) # rosso
-        qf2 = np.full((screen_height//2, screen_width//2, 3), (128,128,0), dtype=np.uint8) # rosso
-        qf3 = np.full((screen_height//2, screen_width//2, 3), (0,128,128), dtype=np.uint8) # rosso
+        # Creazione videowall
+        qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
+        qf2 = np.full((screen_height//2, screen_width//2, 3), (128,128,0), dtype=np.uint8)
+        qf3 = np.full((screen_height//2, screen_width//2, 3), (0,128,128), dtype=np.uint8)
         qf4 = cv2.cvtColor(modified, cv2.COLOR_GRAY2BGR)
 
-        
         videowall = build_videowall(qf1, qf2, qf3, qf4)
         cv2.imshow("Videowall", videowall)
 
@@ -687,8 +694,7 @@ def process_frame4():
             exit(0)
 
         if serial_event_triggered(4):
-            saved_frame = modified.copy() 
-            # piccolo pausa per sicurezza (debounce software lato Pi, opz.)
+            saved_frame = modified.copy()
             time.sleep(0.05)
             break
 
