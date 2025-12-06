@@ -516,11 +516,11 @@ def process_frame1():
         data_oggi = datetime.now().strftime("%d/%m/%Y")
 
 # Scritta "guarda qui" (già esistente)
-        cv2.putText(frame, "guarda qui", (50, 100),
+        cv2.putText(qf1, "guarda qui", (50, 100),
         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 3, cv2.LINE_AA)
 
 # Data sotto la scritta
-        cv2.putText(frame, data_oggi, (50, 150),
+        cv2.putText(qf1, data_oggi, (50, 150),
         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2, cv2.LINE_AA)
         # Face detection e grayscale per il quadrante 1
 
@@ -612,11 +612,11 @@ def process_frame3():
 
         noise_intensity = pots_values["noise"] // 10
 
-        cv2.putText(frame, f"x: {x}", (30, 40),
+        cv2.putText(qf3 , f"x: {x}", (30, 40),
         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 0), 2, cv2.LINE_AA)
 
 # Mostra Y
-        cv2.putText(frame, f"y: {y}", (30, 80),
+        cv2.putText(qf3 , f"y: {y}", (30, 80),
         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
 
 
