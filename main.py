@@ -661,7 +661,7 @@ def process_frame4():
         pots_values = sm.get_pots_snapshot()
 
         # I nomi restano invariati, ma il loro uso cambia
-        x_offset = pots_values["x"] // 4      # velocità scroll orizzontale
+        x_offset = pots_values["xoffset"] // 4      # velocità scroll orizzontale
         y_offset = pots_values["y"] // 2      # non usato per ora, ma tenuto
         quad_width = max(1, pots_values["quadwidth"] // 10)  # non usato, ma non va rinominato
 
