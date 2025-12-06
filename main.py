@@ -508,9 +508,9 @@ def process_frame1():
             break
 
         qf1 = cv2.resize(frame, (screen_width//2, screen_height//2))
-        qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf3 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
-        qf4 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
+        qf2 = cv2.resize(frame, (screen_width//2, screen_height//2))
+        qf3 = cv2.resize(frame, (screen_width//2, screen_height//2))
+        qf4 = cv2.resize(frame, (screen_width//2, screen_height//2))
         
         # Ottieni la data in formato leggibile
         data_oggi = datetime.now().strftime("%d/%m/%Y")
@@ -659,36 +659,31 @@ def process_frame4():
     
     while True:
         pots_values = sm.get_pots_snapshot()
-        # utilizziamo le variabili già presenti
-        x_offset = pots_values["x"] // 2      # potenziometro X
-        y_offset = pots_values["y"] // 2      # potenziometro Y
-        quad_width = max(1, pots_values["quadwidth"] // 10)
+
+        # I nomi restano invariati, ma il loro uso cambia
+        x_offset = pots_values["x"] // 4      # velocità scroll orizzontale
+        y_offset = pots_values["y"] // 2      # non usato per ora, ma tenuto
+        quad_width = max(1, pots_values["quadwidth"] // 10)  # non usato, ma non va rinominato
 
         modified = preview.copy()
         h, w = modified.shape[:2]
 
-        # Quadrante 1 (alto-sinistra)
-        start_x = 0
-        end_x = start_x + quad_width
-        quad = modified[:, start_x:end_x].copy()
-        blank = np.zeros_like(quad)
-        shift = np.clip(x_offset, 0, quad.shape[1])
-        blank[:, shift:] = quad[:, :quad.shape[1]-shift]
-        modified[:, start_x:end_x] = blank
+        # Applichiamo lo scroll orizzontale
+        shift = x_offset % w  # evita overflow, mantiene il loop infinito
 
-        # Quadrante 2 (alto-destra)
-        start_x = quad_width
-        end_x = start_x + quad_width
-        quad = modified[:, start_x:end_x].copy()
-        blank = np.zeros_like(quad)
-        shift = np.clip(y_offset, 0, quad.shape[1])
-        blank[:, shift:] = quad[:, :quad.shape[1]-shift]
-        modified[:, start_x:end_x] = blank
+        # PORZIONE CHE SI MUOVE
+        right_part = modified[:, :w - shift]     # parte che rimane visibile
+        left_part  = modified[:, w - shift:]     # parte che "esce" e rientra da sinistra
+
+        # ricostruzione dell’immagine scrollata
+        scrolled = np.hstack((left_part, right_part))
+
+        modified = scrolled.copy()
 
         # Aggiorno saved_frame
         saved_frame = modified.copy()
 
-        # Creazione videowall
+        # Creazione videowall (resta identica)
         qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
         qf2 = np.full((screen_height//2, screen_width//2, 3), (128,128,0), dtype=np.uint8)
         qf3 = np.full((screen_height//2, screen_width//2, 3), (0,128,128), dtype=np.uint8)
@@ -704,7 +699,6 @@ def process_frame4():
             saved_frame = modified.copy()
             time.sleep(0.05)
             break
-
 
 while True:
     process_frame1()
