@@ -668,22 +668,19 @@ def process_frame4():
         modified = preview.copy()
         h, w = modified.shape[:2]
 
-        # Applichiamo lo scroll orizzontale
-        shift = x_offset % w  # evita overflow, mantiene il loop infinito
+        # --- SCROLL ORIZZONTALE ---
+        shift_x = x_offset % w
 
-        # PORZIONE CHE SI MUOVE
-        right_part = modified[:, :w - shift]     # parte che rimane visibile
-        left_part  = modified[:, w - shift:]     # parte che "esce" e rientra da sinistra
+        right_part = modified[:, :w - shift_x]
+        left_part  = modified[:, w - shift_x:]
+        modified = np.hstack((left_part, right_part))
 
-        # ricostruzione dell’immagine scrollata
-        scrolled = np.hstack((left_part, right_part))
-
+        # --- SCROLL VERTICALE usando quad_width ---
         shift_y = quad_width % h
 
-        top_part = modified[:h - shift_y, :]
+        top_part    = modified[:h - shift_y, :]
         bottom_part = modified[h - shift_y:, :]
 
-        # ricostruzione verticale
         modified = np.vstack((bottom_part, top_part))
 
         modified = scrolled.copy()
