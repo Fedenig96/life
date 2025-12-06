@@ -516,12 +516,11 @@ def process_frame1():
         data_oggi = datetime.now().strftime("%d/%m/%Y")
 
 # Scritta "guarda qui" (già esistente)
-        cv2.putText(qf1, "guarda qui", (50, 100),
-        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 3, cv2.LINE_AA)
+        cv2.putText(qf1, "guarda qui",(120, 80), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
+        
 
 # Data sotto la scritta
-        cv2.putText(qf1, data_oggi, (50, 150),
-        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.putText(qf1, data_oggi, (120, 20), cv2.FONT_HERSHEY_PLAIN, 1.0, (255,255,255), 2)
         # Face detection e grayscale per il quadrante 1
 
         gray = cv2.cvtColor(qf1, cv2.COLOR_BGR2GRAY)
