@@ -678,6 +678,14 @@ def process_frame4():
         # ricostruzione dell’immagine scrollata
         scrolled = np.hstack((left_part, right_part))
 
+        shift_y = quad_width % h
+
+        top_part = modified[:h - shift_y, :]
+        bottom_part = modified[h - shift_y:, :]
+
+        # ricostruzione verticale
+        modified = np.vstack((bottom_part, top_part))
+
         modified = scrolled.copy()
 
         # Aggiorno saved_frame
