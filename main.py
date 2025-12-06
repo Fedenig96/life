@@ -10,6 +10,17 @@ from PIL import Image
 
 # -------------------- CONFIG --------------------
 saved_frame = None   # conterrà l'immagine grayscale salvata
+
+pots = {
+    "descaling": 0,
+    "x": 0,
+    "y": 0,
+    "noise": 0,
+    "xoffset": 0,
+    "quadwidth": 0
+}
+
+
 BAUD = 115200
 screen_width = 1280
 screen_height = 720
@@ -35,11 +46,9 @@ class SerialManager:
     def _open_port(self):
         ports = [p.device for p in serial.tools.list_ports.comports()
                  if ('ACM' in p.device or 'USB' in p.device)]
-
         if not ports:
             print("Nessuna porta seriale trovata")
             return
-        
         try:
             self.ser = serial.Serial(ports[0], self.baud, timeout=0.1)
             self.ser.reset_input_buffer()
@@ -67,23 +76,84 @@ class SerialManager:
     def _read_loop(self):
         while not self.stop_flag:
             try:
-                if self.ser.in_waiting:
-                    line = self.ser.readline().decode('utf-8', errors='ignore').strip().upper()
+                if not self.ser or not self.ser.in_waiting:
+                    time.sleep(0.005)
+                    continue
 
-                    if line.startswith("PRES"):
+                line = self.ser.readline().decode('utf-8', errors='ignore').strip()
+                if not line:
+                    continue
+
+                # normalizza
+                uline = line.upper()
+                # --- button events (es. PRES1) ---
+                if uline.startswith("PRES"):
+                    with self.lock:
+                        self.event = uline  # mantiene l'ultimo evento PRES*
+                    print("Evento seriale:", uline)
+
+                # --- single-pot line (es. POT1,123) ---
+                elif uline.startswith("POT"):
+                    # formati possibili: POT1,123  oppure POT1:123  -> gestiamo entrambi
+                    try:
+                        body = uline[3:]  # dopo "POT"
+                        # rimuovi eventuale separatore iniziale (es. "1,123" o "1:123")
+                        if body.startswith(" "):
+                            body = body.strip()
+                        # split su virgola o due punti
+                        if "," in body:
+                            n_str, val_str = body.split(",", 1)
+                        elif ":" in body:
+                            n_str, val_str = body.split(":", 1)
+                        else:
+                            # fallback: se Arduino manda "POT1 123"
+                            parts = body.split()
+                            if len(parts) >= 2:
+                                n_str, val_str = parts[0], parts[1]
+                            else:
+                                continue
+
+                        pot_idx = int(n_str)  # 1..6
+                        val = int(val_str)
+                        # mappa index -> nome usato nel programma
                         with self.lock:
-                            self.event = line  # ultimo evento ricevuto
-                        print("Evento seriale:", line)
+                            if pot_idx == 1:
+                                pots["descaling"] = val
+                            elif pot_idx == 2:
+                                pots["x"] = val
+                            elif pot_idx == 3:
+                                pots["y"] = val
+                            elif pot_idx == 4:
+                                pots["noise"] = val
+                            elif pot_idx == 5:
+                                pots["xoffset"] = val
+                            elif pot_idx == 6:
+                                pots["quadwidth"] = val
+                        # debug opzionale
+                        # print(f"POT{pot_idx} -> {val}")
+                    except Exception as e:
+                        # ignora linee malformate
+                        print("Parse POT error:", line, e)
+
+                else:
+                    # altre righe debug/READY ecc.
+                    # opzionale: print("Serial raw:", line)
+                    pass
+
             except Exception as e:
                 print("Errore seriale:", e)
-            time.sleep(0.005)
+                time.sleep(0.01)
 
     def get_last_event(self):
         with self.lock:
             ev = self.event
             self.event = None
             return ev
-        
+
+    def get_pots_snapshot(self):
+        """Ritorna copia thread-safe degli attuali potenziometri (0-1023)"""
+        with self.lock:
+            return dict(pots)
 # -------------------- ISTANZIA E START --------------------
 sm = SerialManager()
 sm.start()
@@ -484,15 +554,15 @@ def process_frame1():
 
 def process_frame2():
     global saved_frame
-
+    
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     
 
     while True:
 
-
-        descaling_factor = 4  # puoi cambiare questo valore a piacere
+        pots_values = sm.get_pots_snapshot()
+        descaling_factor = max(1, pots_values["descaling"] // 100)
 
         small = cv2.resize(preview, 
                            (preview.shape[1] // descaling_factor, preview.shape[0] // descaling_factor), 
@@ -531,7 +601,13 @@ def process_frame3():
     noise_intensity = 30  # regolabile, quantità di rumore
 
     while True:
-        # Creo la maschera circolare
+        
+        pots_values = sm.get_pots_snapshot()
+        x = pots_values["x"] // 2      # mappatura esempio
+        y = pots_values["y"] // 2
+        noise_intensity = pots_values["noise"] // 10
+
+
         mask = np.zeros_like(preview, dtype=np.uint8)
         cv2.rectangle(mask, (x, y), (x + w, y + h), 255, -1)  # 255 dentro il cerchio
 
@@ -570,8 +646,9 @@ def process_frame4():
     if saved_frame is not None:
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     while True:
-        x_offset = 50  # quanto traslare in pixel
-        quad_width = 100  # larghezza di ciascun "quadrante" da spostare
+        pots_values = sm.get_pots_snapshot()
+        x_offset = pots_values["xoffset"] // 2
+        quad_width = max(1, pots_values["quadwidth"] // 10)
 
         modified = preview.copy()
         h, w = modified.shape[:2]
