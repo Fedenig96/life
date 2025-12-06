@@ -596,7 +596,8 @@ def process_frame3():
 
     
     # Coordinate del rettangolo
-    x, y = 100, 50      # angolo in alto a sinistra
+    x = 100
+    y=50      # angolo in alto a sinistra
     w, h = 80, 80       # larghezza e altezza del rettangolo
     noise_intensity = 30  # regolabile, quantità di rumore
     max_x = preview.shape[1] - w  # massima posizione X
