@@ -658,37 +658,42 @@ def process_frame4():
         preview = cv2.resize(saved_frame, (screen_width//2, screen_height//2))
     
     while True:
+    # 📥 Lettura potenziometri
         pots_values = sm.get_pots_snapshot()
 
-        # I nomi restano invariati, ma il loro uso cambia
-        x_offset = pots_values["xoffset"] // 4      # velocità scroll orizzontale
-        y_offset = pots_values["y"] // 2      # non usato per ora, ma tenuto
-        quad_width = max(1, pots_values["quadwidth"] // 10)  # non usato, ma non va rinominato
+        x_offset = pots_values["xoffset"] // 4
+        y_offset = pots_values["y"] // 2               # non usato per ora, ma mantenuto
+        quad_width = max(1, pots_values["quadwidth"] // 10)
 
         modified = preview.copy()
         h, w = modified.shape[:2]
 
-        # --- SCROLL ORIZZONTALE ---
-        shift_x = x_offset % w
-
-        right_part = modified[:, :w - shift_x]
-        left_part  = modified[:, w - shift_x:]
-        modified = np.hstack((left_part, right_part))
-
-        # --- SCROLL VERTICALE usando quad_width ---
+        # -----------------------------------------
+        # 1) 📌 SCROLL VERTICALE (usa quad_width)
+        # -----------------------------------------
         shift_y = quad_width % h
 
-        top_part    = modified[:h - shift_y, :]
+        top_part = modified[:h - shift_y, :]
         bottom_part = modified[h - shift_y:, :]
 
         modified = np.vstack((bottom_part, top_part))
 
-        modified = scrolled.copy()
+        # -----------------------------------------
+        # 2) 📌 SCROLL ORIZZONTALE (usa x_offset)
+        # -----------------------------------------
+        shift_x = x_offset % w
 
-        # Aggiorno saved_frame
+        right_part = modified[:, :w - shift_x]
+        left_part  = modified[:, w - shift_x:]
+
+        modified = np.hstack((left_part, right_part))
+
+        # 📌 Salvataggio frame finale
         saved_frame = modified.copy()
 
-        # Creazione videowall (resta identica)
+        # ------------------------------------------------
+        # 3) 🧱 COSTRUZIONE VIDEOWALL (resta invariata)
+        # ------------------------------------------------
         qf1 = np.full((screen_height//2, screen_width//2, 3), (0,0,255), dtype=np.uint8)
         qf2 = np.full((screen_height//2, screen_width//2, 3), (128,128,0), dtype=np.uint8)
         qf3 = np.full((screen_height//2, screen_width//2, 3), (0,128,128), dtype=np.uint8)
@@ -697,13 +702,16 @@ def process_frame4():
         videowall = build_videowall(qf1, qf2, qf3, qf4)
         cv2.imshow("Videowall", videowall)
 
+        # ESC → esci
         if cv2.waitKey(1) == 27:
             exit(0)
 
+        # Trigger → salva frame e lascia il loop
         if serial_event_triggered(4):
             saved_frame = modified.copy()
             time.sleep(0.05)
             break
+
 
 while True:
     process_frame1()
