@@ -633,14 +633,12 @@ def process_frame3():
         qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
         qf3 = cv2.cvtColor(modified, cv2.COLOR_GRAY2BGR)
         qf4 = np.full((screen_height//2, screen_width//2, 3), (255,255,0), dtype=np.uint8) # rosso
-        cv2.putText(qf3 , x, (30, 40),
-        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(qf3 , str(x), (30, 40),cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 0), 2, cv2.LINE_AA)
 
 # Mostra Y
-        cv2.putText(qf3 , y, (30, 80),
-        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+        cv2.putText(qf3 , str(y), (30, 80),cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
 
-        
+
         videowall = build_videowall(qf1, qf2, qf3, qf4)
         cv2.imshow("Videowall", videowall)
 
