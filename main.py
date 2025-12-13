@@ -635,7 +635,7 @@ def process_frame3():
         # Creo il rumore
         noise = np.random.randint(-noise_intensity, noise_intensity+1, preview.shape, dtype=np.int16)
         noisy_img = preview.astype(np.int16) + noise
-        noisy_img = np.clip(noisy_img, 0, 255).astype(np.uint8)
+        noisy_img = np.clip(noisy_img, 0, 128).astype(np.uint8)
 
         # Applico il noise solo fuori dal cerchio
         modified = noisy_img.copy()
