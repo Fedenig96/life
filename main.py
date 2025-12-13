@@ -480,7 +480,11 @@ def process_printer_test():
 
         # Invia alla stampante
         p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
+        p.set("right")
+        p.text("13/12/25 16:00")
+        p.set("left")
         p.image(pil_img)
+        p.text("Studio Sinapsi")
         p.cut()
         print("Stampato su stampante ESC/POS")
         time.sleep(0.5)  # piccola pausa
