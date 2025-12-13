@@ -445,7 +445,7 @@ def transition4(screen_width, screen_height):
 
 
 def process_printer_test():
-    
+    data_oggi = datetime.now().strftime("%d/%m/%Y")
     global saved_frame
 
     if saved_frame is None:
@@ -477,6 +477,7 @@ def process_printer_test():
         # Converti in PIL Image 1-bit
         pil_img = Image.fromarray(img_bright)
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
+
         p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
         # Invia alla stampante
         p.set(align='RIGHT')
