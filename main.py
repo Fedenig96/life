@@ -473,14 +473,14 @@ def process_printer_test():
         scale = max_width / img.shape[1]
         new_height = int(img.shape[0] * scale)
         img_resized = cv2.resize(img, (max_width, new_height), interpolation=cv2.INTER_LINEAR)
-        img_bright = cv2.add(img_resized,70)
+        img_bright = cv2.add(img_resized,80)
         # Converti in PIL Image 1-bit
         pil_img = Image.fromarray(img_bright)
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
         p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
         # Invia alla stampante
         p.set(align='RIGHT')
-        p.text("13/12/25 16:00\n")   # <-- newline FONDAMENTALE
+        p.text(data_oggi + "\n")   # <-- newline FONDAMENTALE
 
         # 2. Reset allineamento a sinistra
         p.set(align='LEFT')
