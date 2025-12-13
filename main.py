@@ -477,7 +477,7 @@ def process_printer_test():
         # Converti in PIL Image 1-bit
         pil_img = Image.fromarray(img_bright)
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
-
+        p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
         # Invia alla stampante
         p.set(align='RIGHT')
         p.text("13/12/25 16:00\n")   # <-- newline FONDAMENTALE
