@@ -620,29 +620,33 @@ def process_frame3():
     while True:
         pots_values = sm.get_pots_snapshot()
 
-        # Map dei potenziometri x e y in coordinate indipendenti
-        x = int(pots_values["x"] / 1023 * max_x)  # normalizzo sul range del rettangolo
+        # Map dei potenziometri x e y
+        x = int(pots_values["x"] / 1023 * max_x)
         y = int(pots_values["y"] / 1023 * max_y)
 
-        noise_intensity = pots_values["noise"] // 10
+        noise_intensity = pots_values["noise"] // 4   # scala 0–255 consigliata
+        noise_intensity = np.clip(noise_intensity, 0, 255)
 
-
-
-
+        # Maschera rettangolare
         mask = np.zeros_like(preview, dtype=np.uint8)
-        cv2.rectangle(mask, (x, y), (x + w, y + h), 255, -1)  # 255 dentro il cerchio
+        cv2.rectangle(mask, (x, y), (x + w, y + h), 255, -1)
 
-        # Creo il rumore
-        noise = np.random.randint(-noise_intensity, noise_intensity+1, preview.shape, dtype=np.int16)
-        noisy_img = preview.astype(np.int16) + noise
-        noisy_img = np.clip(noisy_img, 0, 128).astype(np.uint8)
+        # ---------- EFFETTO NEGATIVO ----------
+        negative = 255 - preview
 
-        # Applico il noise solo fuori dal cerchio
-        modified = noisy_img.copy()
-        modified[mask == 255] = preview[mask == 255]   # l'area dentro il cerchio resta originale
+        alpha = noise_intensity / 255.0
+        negative_blend = (
+            preview.astype(np.float32) * (1 - alpha) +
+            negative.astype(np.float32) * alpha
+        ).astype(np.uint8)
 
-        # Aggiorno saved_frame per il prossimo step
+        # Applico il negativo SOLO fuori dal rettangolo
+        modified = negative_blend.copy()
+        modified[mask == 255] = preview[mask == 255]
+
+        # Aggiorno saved_frame
         saved_frame = modified.copy()
+
 
         qf1 = np.full((screen_height//2, screen_width//2, 3), (255,0,255), dtype=np.uint8) # rosso
         qf2 = np.zeros((screen_height//2, screen_width//2, 3), dtype=np.uint8)
