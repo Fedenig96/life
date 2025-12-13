@@ -479,12 +479,22 @@ def process_printer_test():
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
 
         # Invia alla stampante
-        p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
-        p.set("right")
-        p.text("13/12/25 16:00")
-        p.set("left")
+        p.set(align='RIGHT')
+        p.text("13/12/25 16:00\n")   # <-- newline FONDAMENTALE
+
+        # 2. Reset allineamento a sinistra
+        p.set(align='LEFT')
+        p.text("\n")                # chiude definitivamente il buffer testo
+
+        # 3. Stampa immagine
         p.image(pil_img)
-        p.text("Studio Sinapsi")
+        p.text("\n")                # feed dopo immagine (importantissimo)
+
+        # 4. Testo sotto l'immagine
+        p.set(align='LEFT')
+        p.text("Studio Sinapsi\n")
+
+        # 5. Taglio
         p.cut()
         print("Stampato su stampante ESC/POS")
         time.sleep(0.5)  # piccola pausa
