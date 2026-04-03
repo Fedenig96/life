@@ -536,7 +536,7 @@ def process_printer_test():
 
         # 4. Testo sotto l'immagine
         p.set(align='LEFT')
-        p.text("Studio Sinapsi -----------------\n")
+        p.text("Aprile festival ----------------\n")
 
         # 5. Taglio
         p.cut()
