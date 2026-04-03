@@ -724,8 +724,8 @@ def process_frame4():
         pots_values = sm.get_pots_snapshot()
 
         x_offset = pots_values["xoffset"] // 4
-         y_offset = pots_values["y"] // 2               # non usato per ora, ma mantenuto
-         quad_width = max(1, pots_values["quadwidth"] // 10)
+        y_offset = pots_values["y"] // 2               # non usato per ora, ma mantenuto
+        quad_width = max(1, pots_values["y"] // 10)
 
         modified = preview.copy()
         h, w = modified.shape[:2]
@@ -733,7 +733,7 @@ def process_frame4():
         # -----------------------------------------
         # 1) 📌 SCROLL VERTICALE (usa quad_width)
         # -----------------------------------------
-        # shift_y = quad_width % h
+        shift_y = quad_width % h
 
         top_part = modified[:h - shift_y, :]
         bottom_part = modified[h - shift_y:, :]
