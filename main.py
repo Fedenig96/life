@@ -733,7 +733,7 @@ def process_frame4():
         # -----------------------------------------
         # 1) 📌 SCROLL VERTICALE (usa quad_width)
         # -----------------------------------------
-        shift_y = quad_width % h
+        # shift_y = quad_width % h
 
         top_part = modified[:h - shift_y, :]
         bottom_part = modified[h - shift_y:, :]
