@@ -486,9 +486,7 @@ def process_printer_test():
         from PIL import ImageEnhance
         logo = ImageEnhance.Contrast(logo).enhance(2.0)
         logo = logo.convert("1")
-        p.set(align='CENTER')
-        p.image(logo)
-        p.text("\n")
+        
 
 
 
@@ -511,7 +509,20 @@ def process_printer_test():
         pil_img = pil_img.convert('1')  # bianco/nero 1-bit
 
         p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
+
+
+
+
         # Invia alla stampante
+
+        p.set(align='CENTER')
+        p.image(logo)
+        p.text("\n")
+
+
+
+
+
         p.set(align='RIGHT')
         p.text("------------ 10 - 12 APRILE 2026\n")   # <-- newline FONDAMENTALE
 
