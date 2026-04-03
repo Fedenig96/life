@@ -8,6 +8,8 @@ from collections import deque
 from escpos.printer import Usb
 from PIL import Image
 from datetime import datetime
+from PIL import Image
+
 # -------------------- CONFIG --------------------
 saved_frame = None   # conterrà l'immagine grayscale salvata
 
@@ -445,8 +447,14 @@ def transition4(screen_width, screen_height):
 
 
 def process_printer_test():
-    data_oggi = datetime.now().strftime("%d/%m/%Y")
+    # data_oggi = datetime.now().strftime("%d/%m/%Y")
     global saved_frame
+
+    
+
+
+
+
 
     if saved_frame is None:
         print("Nessun frame salvato da stampare!")
@@ -463,6 +471,30 @@ def process_printer_test():
         IN_EP = 0x82
 
         # p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
+
+        # --- Logo PNG ---
+        logo = Image.open("sinapsi.png").convert("RGBA")
+        max_width = 384
+        ratio = max_width / logo.width
+        new_height = int(logo.height * ratio)
+        logo = logo.resize((max_width, new_height), Image.LANCZOS)
+        # Appiattisci trasparenza su sfondo bianco
+        sfondo = Image.new("RGBA", logo.size, (255, 255, 255, 255))
+        sfondo.paste(logo, mask=logo.split()[3])
+        logo = sfondo.convert("L")  # scala di grigi
+        # Aumenta contrasto PRIMA di convertire in 1-bit
+        from PIL import ImageEnhance
+        logo = ImageEnhance.Contrast(logo).enhance(2.0)
+        logo = logo.convert("1")
+        p.set(align='CENTER')
+        p.image(logo)
+        p.text("\n")
+
+
+
+
+
+
 
         img = saved_frame.copy() 
         if len(img.shape) == 3:
@@ -481,7 +513,7 @@ def process_printer_test():
         p = Usb(VENDOR_ID, PRODUCT_ID, in_ep=IN_EP, out_ep=OUT_EP)
         # Invia alla stampante
         p.set(align='RIGHT')
-        p.text(data_oggi + "\n")   # <-- newline FONDAMENTALE
+        p.text("------------ 10 - 12 APRILE 2026\n")   # <-- newline FONDAMENTALE
 
         # 2. Reset allineamento a sinistra
         p.set(align='LEFT')
@@ -493,7 +525,7 @@ def process_printer_test():
 
         # 4. Testo sotto l'immagine
         p.set(align='LEFT')
-        p.text("Studio Sinapsi\n")
+        p.text("Studio Sinapsi -----------------\n")
 
         # 5. Taglio
         p.cut()
