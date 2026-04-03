@@ -724,8 +724,8 @@ def process_frame4():
         pots_values = sm.get_pots_snapshot()
 
         x_offset = pots_values["xoffset"] // 4
-        # y_offset = pots_values["y"] // 2               # non usato per ora, ma mantenuto
-        # quad_width = max(1, pots_values["quadwidth"] // 10)
+         y_offset = pots_values["y"] // 2               # non usato per ora, ma mantenuto
+         quad_width = max(1, pots_values["quadwidth"] // 10)
 
         modified = preview.copy()
         h, w = modified.shape[:2]
